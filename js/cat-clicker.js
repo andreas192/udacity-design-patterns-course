@@ -93,6 +93,7 @@ var viewCatImg = {
     viewCatImg.render();
   },
   'render': function() {
+    var selectedCatIndex = this.selectedCatIndex;
     this.catViewName.innerHTML = this.selectedCat.name;
     this.catViewImage.src = this.selectedCat.src;
     this.catViewContainer.style.display = "block";
@@ -108,9 +109,9 @@ var viewCatImg = {
       }
     }(this.selectedCatIndex));
 
-    document.getElementById("showAdminForm").addEventListener("click", function(index, currentCat) {
-      octopus.getAdminForm(index);
-    }(this.selectedCatIndex));
+    document.getElementById("showAdminForm").addEventListener("click", function() {
+      octopus.getAdminForm(selectedCatIndex);
+    });
   }
 }
 
@@ -143,7 +144,7 @@ var viewAdminMode = {
   'render': function() {
     this.imageName.value = this.selectedCat.name;
     this.imageSrc.value = this.selectedCat.src;
-    this.clickCounter = this.selectedCat.clickCounter ? this.selectedCat.clickCounter : '0';
+    this.clickCounter.value = this.selectedCat.clickCounter;
   },
   destroy: function() {
 
