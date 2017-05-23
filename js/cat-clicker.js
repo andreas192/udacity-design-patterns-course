@@ -31,10 +31,12 @@ var octopus = {
   'getSelectedCat': function(index) {
       var selectedCat = model.getCat(index);
       viewCatImg.init(selectedCat, index);
+      viewAdminMode.init(selectedCat, index, true);
   },
   'increaseCounter': function (index) {
     model.increaseCounter(index);
     viewCatImg.init(model.getCat(index), index);
+    viewAdminMode.render(model.getCat(index), index, true);
   },
   'init': function() {
     model.init();
@@ -116,14 +118,13 @@ var viewCatImg = {
 }
 
 var viewAdminMode = {
-  'init': function(selectedCat, index) {
-    this.selectedCat = selectedCat;
-    this.selectedCatIndex = index;
+  'init': function(selectedCat, index, changeCat = false) {
+    this.isInit = true;
     this.imageName = document.getElementsByName("name")[0];
     this.imageSrc = document.getElementsByName("src")[0];
     this.clickCounter = document.getElementsByName("clickCounter")[0];
     this.form = document.getElementsByTagName("form")[0];
-    this.form.style.display = "block";
+    this.form.style.display = !changeCat ? "block" : "none";
 
     this.form.submit = function(e) {
       e.preventDefault();
@@ -135,19 +136,25 @@ var viewAdminMode = {
 
     };
 
-    document.getElementById("cancel").addEventListener("click", function() {
-      viewAdminMode.destroy();
+    document.getElementById("cancel").addEventListener("click", function(e) {
+      e.preventDefault();
+      viewAdminMode.hide();
     });
 
-    viewAdminMode.render();
+    viewAdminMode.render(selectedCat, index);
   },
-  'render': function() {
-    this.imageName.value = this.selectedCat.name;
-    this.imageSrc.value = this.selectedCat.src;
-    this.clickCounter.value = this.selectedCat.clickCounter;
+  'render': function(selectedCat, index) {
+    if(this.isInit) {
+      this.imageName.value = selectedCat.name;
+      this.imageSrc.value = selectedCat.src;
+      this.clickCounter.value = selectedCat.clickCounter;
+    }
   },
-  destroy: function() {
-
+  hide: function() {
+    this.imageName.value = null;
+    this.imageSrc.value = null;
+    this.clickCounter.value = null;
+    this.form.style.display = "none";
   }
 }
 octopus.init();
